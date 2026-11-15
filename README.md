@@ -1,4 +1,4 @@
-# 易标投标工具箱 - AI智能标书写作助手
+# 投标精灵 - AI智能标书写作助手
 
 <p align="center">
   <strong>简体中文</strong> | <a href="./README.en.md">English</a>
@@ -28,7 +28,7 @@
 <p align="left">
   <strong>🚀 开箱即用-开源免费AI标书编写工具</strong>
   <br>
-  易标投标工具箱是一款面向招投标场景的智能标书制作工具，完全开源，包括AI生成技术方案、图文生成、商务标、企业知识库管理、标书查重、废标项检查、标讯等，更多功能还在开发中。
+  投标精灵是一款面向招投标场景的智能标书制作工具，完全开源，包括AI生成技术方案、图文生成、商务标、企业知识库管理、标书查重、废标项检查、标讯等，更多功能还在开发中。
   <br>
   支持OpenAI like模式的所有AI api，也支持ollama、lm studio等接入本地模型。
   <br>
@@ -58,9 +58,9 @@
 
 ## 💌 友情链接
 
-【[易标 Web 版 (由第三方提供)](https://github.com/jdcome/OpenBidKit-Yibiao-Web)】
+【[投标精灵 Web 版 (由第三方提供)](https://github.com/jdcome/OpenBidKit-Yibiao-Web)】
 
-<img src="./screenshots/banner2.webp" alt="易标使用演示视频" width="100%">
+<img src="./screenshots/banner2.webp" alt="投标精灵使用演示视频" width="100%">
 
 <h2 align="center">✨ 核心功能与优势</h2>
 <p align="center">
@@ -160,7 +160,7 @@
 ### 🎬 使用方式
 
 <a href="https://www.bilibili.com/video/BV1sC5i6SE74">
-  <img src="./screenshots/home_2.png" alt="易标使用演示视频" width="100%">
+  <img src="./screenshots/home_2.png" alt="投标精灵使用演示视频" width="100%">
 </a>
 
 [点击前往 Bilibili 观看使用演示视频](https://www.bilibili.com/video/BV1sC5i6SE74)
@@ -205,7 +205,7 @@ npm run dist:mac    # macOS Intel / Apple Silicon DMG 和 ZIP
 ### 🏗️ 项目结构
 
 ```
-易标投标工具箱/
+投标精灵/
 ├── client/                    # Electron 桌面客户端
 │   ├── electron/              # Main、Preload、IPC 与本地服务
 │   ├── src/                   # Renderer 应用源码
@@ -232,10 +232,10 @@ npm run dist:mac    # macOS Intel / Apple Silicon DMG 和 ZIP
 
 ## 🙏致歉
 
-易标AI没有指使或暗示任何人到友商客户群刷存在感，均为用户个人行为，对受影响的友商深表歉意。  
+投标精灵AI没有指使或暗示任何人到友商客户群刷存在感，均为用户个人行为，对受影响的友商深表歉意。  
 已经严令禁止。  
 AI 标书还处于初级阶段，一片蓝海，友商团结起来，才能把 AI 标书这个行业蛋糕做大。  
-易标努力向行业龙头学习，再次向受影响的友商致歉。  
+投标精灵努力向行业龙头学习，再次向受影响的友商致歉。  
 <table>
 <tr>
 <td>

@@ -1,6 +1,6 @@
-# 易标智能体工作区
+# 投标精灵智能体工作区
 
-当前工作目录由易标客户端提供，是本次任务的工作区。输入材料、过程文件和结果文件均按任务约定在该目录内读取或保存。
+当前工作目录由投标精灵客户端提供，是本次任务的工作区。输入材料、过程文件和结果文件均按任务约定在该目录内读取或保存。
 
 可用命令：rg、fd、jq、node、ls、cat、pwd、head、tail、wc、sort、uniq、mkdir、cp、mv、rm、touch、basename、dirname、realpath、cut、tr、du、stat、grep、find、sed。
 

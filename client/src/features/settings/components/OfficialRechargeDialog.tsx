@@ -104,7 +104,7 @@ export default function OfficialRechargeDialog({ onClose, onViewOrders, initialO
     <AppDialog
       open
       onOpenChange={(open) => { if (!open) onClose(); }}
-      kicker="易标官方API"
+      kicker="投标精灵官方API"
       title={isSuccess ? '充值成功' : '充值'}
       description={isSuccess ? 'e点已入账，开始下一份精彩。' : order?.status === 'CLOSED' ? '可重新选择充值套餐。' : undefined}
       cardClassName={`donation-dialog-card official-recharge-dialog${isSuccess ? ' is-success' : ''}`}

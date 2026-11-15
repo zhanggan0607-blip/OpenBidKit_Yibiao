@@ -130,7 +130,7 @@ function buildDiagnosisPrompt({ title, stage, prompt, sourceDir, workspaceDir, s
     '- stop：问题出在程序或数据状态上，原 Agent 用现有工具无法处理，或者继续执行会损坏结果。在 user_message 中面向不懂软件开发的用户，简单说明发生了什么、建议怎么做，不出现文件名、字段名、代码等术语。',
     ...(finish ? ['- finish：本阶段剩余工作对后续流程没有严重影响，可以由程序结束本阶段（程序会代为执行本阶段的程序工具或复核收尾，未完成的部分记为遗留问题），然后进入下一阶段。在 user_message 中面向用户说明哪些工作没有完成、对结果有什么影响，同样不出现软件术语。'] : []),
   ];
-  return `你是易标投标工具箱的诊断 Agent。另一个 Agent（下称原 Agent）正在执行「${title}」任务，在阶段「${stage}」连续 ${STAGE_LOOP_LIMIT} 轮结束本轮都没有完成阶段要求，程序每轮原样重发了同一条提示。程序已暂停原 Agent，由你查明原因并给出处理结论。
+  return `你是投标精灵的诊断 Agent。另一个 Agent（下称原 Agent）正在执行「${title}」任务，在阶段「${stage}」连续 ${STAGE_LOOP_LIMIT} 轮结束本轮都没有完成阶段要求，程序每轮原样重发了同一条提示。程序已暂停原 Agent，由你查明原因并给出处理结论。
 
 程序反复发出的提示：
 <<<

@@ -6,7 +6,7 @@ const { fetchWithRedirect } = require('../utils/fetchWithRedirect.cjs');
 const SERVICE_BASE_URL = 'https://v3.yibiao.pro/qhp-yibiao';
 const OPEN_PATH = '/anonymous/yibiao/open';
 const RECHARGE_PATH = '/anonymous/yibiao/recharge';
-const API_KEY_NAME = '易标开源版';
+const API_KEY_NAME = '投标精灵开源版';
 // 匿名令牌只返回字符串，有效期由服务端固定为 900 秒。
 const ANONYMOUS_TOKEN_LIFETIME = 900 * 1000;
 const PAGE_SIZE = 5;

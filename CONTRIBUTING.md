@@ -1,7 +1,7 @@
 
 # 贡献指南
 
-感谢你关注易标 AI（OpenBidKit_Yibiao）。
+感谢你关注投标精灵 AI（OpenBidKit_Yibiao）。
 
 本项目是一个开源免费的 AI 标书编写工具，欢迎提交问题反馈、功能建议、文档优化和代码贡献。
 

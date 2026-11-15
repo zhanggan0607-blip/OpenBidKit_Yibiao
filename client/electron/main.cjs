@@ -10,6 +10,8 @@ const { ensureDiagnosisSource } = require('./services/diagnosisSourceService.cjs
 
 const rendererUrl = process.env.ELECTRON_RENDERER_URL;
 const iconPath = path.join(__dirname, '../assets/icon.ico');
+// 品牌改名后锁定内部 userData 目录名，保持数据层不变（dev 与打包后一致）。
+app.setName('yibiao-client');
 const packagedIndexUrl = pathToFileURL(path.join(__dirname, '../dist/index.html')).toString();
 const IP_BLOCK_LIST_ENDPOINT = 'https://analytics.agnet.top/ip-blocks';
 const GPU_HARDWARE_ACCELERATION_TRIAL_ARG = '--yibiao-trial-hardware-acceleration';
@@ -343,7 +345,7 @@ function createMainWindow() {
     minWidth: 1040,
     minHeight: 720,
     backgroundColor: '#f8fafd',
-    title: '易标投标工具箱',
+    title: '投标精灵',
     icon: fs.existsSync(iconPath) ? iconPath : undefined,
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     webPreferences: {

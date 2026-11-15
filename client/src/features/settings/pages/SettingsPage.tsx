@@ -59,7 +59,7 @@ function getLicenseSourceLabel(status: LicenseRuntimeStatus | null) {
 }
 
 const textModelProviders: Array<{ value: TextModelProvider; label: string }> = [
-  { value: 'official', label: '易标官方API' },
+  { value: 'official', label: '投标精灵官方API' },
   { value: 'jinlong', label: '金龙中转站【推荐】' },
   { value: 'volcengine', label: '火山方舟' },
   { value: 'deepseek', label: 'DeepSeek' },
@@ -208,7 +208,7 @@ function textProfileFromState(textModel: SettingsPageState['textModel']): TextMo
 }
 
 const imageProviders: Array<{ value: ImageModelProvider; label: string }> = [
-  { value: 'official', label: '易标官方API' },
+  { value: 'official', label: '投标精灵官方API' },
   { value: 'jinlong', label: '金龙中转站【推荐】' },
   { value: 'volcengine', label: '火山方舟' },
   { value: 'google-ai-studio', label: 'Google AI Studio' },
@@ -382,7 +382,7 @@ const imageProviderApiKeyUrls: Record<ImageModelProvider, string> = {
 };
 
 const imageProviderLabels: Record<ImageModelProvider, string> = {
-  official: '易标官方API',
+  official: '投标精灵官方API',
   jinlong: '金龙中转站',
   volcengine: '火山方舟',
   'google-ai-studio': 'Google AI Studio',

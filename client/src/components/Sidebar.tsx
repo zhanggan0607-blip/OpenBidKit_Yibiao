@@ -5,7 +5,7 @@ import NoticeBoardDialog from '../features/notice/components/NoticeBoardDialog';
 import { useNoticeUnread } from '../features/notice/hooks/useNoticeUnread';
 import type { AppMenuItem, SectionId } from '../shared/types/navigation';
 import { AppDialog, useNoticeToast } from '../shared/ui';
-import SidebarAdCard from './SidebarAdCard';
+
 import logoUrl from '../../assets/icon_256.png';
 import groupChatQrUrl from '../../assets/group-chat-qr.png';
 
@@ -98,8 +98,8 @@ function Sidebar({ activeSection, developerMode, onSectionChange }: SidebarProps
           <img src={logoUrl} alt="" />
         </div>
         <div className="brand-copy">
-          <span>易标</span>
-          <strong>投标工具箱</strong>
+          <span>投标工具箱</span>
+          <strong>投标精灵</strong>
         </div>
       </div>
 
@@ -139,8 +139,6 @@ function Sidebar({ activeSection, developerMode, onSectionChange }: SidebarProps
         })}
       </nav>
 
-      <SidebarAdCard collapsed={collapsed} />
-
       <div className="sidebar-footer">
         <div className="sidebar-footer-shortcuts">
           {collapsed ? wrapTooltip('使用文档', renderUserGuideButton()) : renderUserGuideButton()}
@@ -161,7 +159,7 @@ function Sidebar({ activeSection, developerMode, onSectionChange }: SidebarProps
         cardClassName="group-chat-dialog"
         actions={<button type="button" className="secondary-action" onClick={() => setGroupChatOpen(false)}>关闭</button>}
       >
-        <img className="group-chat-qr" src={groupChatQrSource} alt="易标用户交流群二维码" />
+        <img className="group-chat-qr" src={groupChatQrSource} alt="投标精灵用户交流群二维码" />
       </AppDialog>
 
       <NoticeBoardDialog open={noticeOpen} onOpenChange={setNoticeOpen} onLoaded={markNoticeSeen} />

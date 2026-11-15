@@ -1,6 +1,6 @@
 # 安全策略
 
-感谢你关注易标 AI（OpenBidKit_Yibiao）的安全问题。
+感谢你关注投标精灵 AI（OpenBidKit_Yibiao）的安全问题。
 
 ## 支持版本
 

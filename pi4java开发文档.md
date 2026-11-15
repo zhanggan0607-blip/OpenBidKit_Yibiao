@@ -5,7 +5,7 @@
 | 代号 | 含义 | 说明 |
 |---|---|---|
 | `$PI` | Pi 1.5.2 源码根目录 | 目录下有 `packages/ai`、`packages/agent`、`packages/coding-agent` 等。各包 `package.json` 的版本是 `1.5.2` |
-| `$YIBIAO` | 易标投标工具箱（yibiao-simple）源码根目录 | 只用到 `client/electron/services/pi/` 和 `client/electron/services/agent/` 下的少量文件，用于第 9 章的内置附加能力 |
+| `$YIBIAO` | 投标精灵（yibiao-simple）源码根目录 | 只用到 `client/electron/services/pi/` 和 `client/electron/services/agent/` 下的少量文件，用于第 9 章的内置附加能力 |
 
 开工第一步：确认这两个目录在本机的实际路径，并写进新仓库的 `README` 开发说明。本文所有路径都以这两个代号开头。
 
@@ -479,7 +479,7 @@ Java 里事件订阅的写法由开发者定（按事件类或按事件名均可
 
 ## 9. 内置附加能力（pi4java 自有）
 
-这一章的内容不来自 Pi，来自易标项目在 Pi 之上积累的做法。它们全部放在包 `io.github.fb208.pi4java.codingagent.extras`，对复刻部分的改动只有三处，都要登记到 `DIFF.md`：
+这一章的内容不来自 Pi，来自投标精灵项目在 Pi 之上积累的做法。它们全部放在包 `io.github.fb208.pi4java.codingagent.extras`，对复刻部分的改动只有三处，都要登记到 `DIFF.md`：
 
 1. `createAgentSession` 的选项多一个 `extras` 字段（类型 `ExtrasOptions`）。
 2. 默认启用的工具清单多两个名字：`json-validation`、`ask-user`。
@@ -487,7 +487,7 @@ Java 里事件订阅的写法由开发者定（按事件类或按事件名均可
 
 除此之外，附加能力只通过第 8 章的扩展接口和第 6 章的钩子工作。
 
-**提示文本的语言**：本章涉及的工具说明、追加的系统提示词、返回给模型的文字，默认**逐字沿用易标项目的中文原文**（下文给出了出处，短的直接给出全文）。每一项都要允许使用方整体替换文本。
+**提示文本的语言**：本章涉及的工具说明、追加的系统提示词、返回给模型的文字，默认**逐字沿用投标精灵项目的中文原文**（下文给出了出处，短的直接给出全文）。每一项都要允许使用方整体替换文本。
 
 **状态的取得方式**：Pi 的 `prompt()` 没有返回值，`abort()` 也不带原因。附加能力需要告诉使用方“为什么停了”时，统一做法是：每个附加能力是一个使用方持有的对象，对象上有查询方法和可选的回调。使用方在 `prompt()` 返回后查询这些对象。不要为此修改 `AgentSession` 的接口。
 
@@ -622,7 +622,7 @@ Java 里事件订阅的写法由开发者定（按事件类或按事件名均可
 
 目的：一段时间内既没有模型数据也没有工具活动，就认定卡死并中止。
 
-- 开启：`ExtrasOptions.idleTimeout(时长)`。不设置即关闭。易标项目使用的值是 8 分钟，可作为 README 中的建议值。
+- 开启：`ExtrasOptions.idleTimeout(时长)`。不设置即关闭。投标精灵项目使用的值是 8 分钟，可作为 README 中的建议值。
 - 只在运行进行期间计时（从 `agent_start` 到 `agent_settled`）。会话空闲时不计时。
 - 下列事件发生时刷新“最近活动时间”：`agent_start`、`agent_end`、`turn_start`、`turn_end`、`message_start`、`message_update`、`provider_stream_event`、`after_provider_response`、`tool_execution_start`、`tool_execution_update`、`tool_execution_end`、压缩开始与结束、自动重试开始与结束。
 - 暂停计时：`ask-user` 或 `report-failure` 正在等待用户回答期间；任何界面提示进行期间（`ui_prompt_start` 到 `ui_prompt_end`）。恢复时把最近活动时间设为当前时间。

@@ -32,13 +32,15 @@ export function AgentQuestionDialogProvider({ children }: { children: ReactNode 
   const { showToast } = useToast();
 
   useEffect(() => {
+    const agentBridge = window.yibiao?.agent;
+    if (!agentBridge) return undefined;
     let active = true;
     let receivedEvent = false;
-    const unsubscribe = window.yibiao.agent.onQuestion((nextQuestion) => {
+    const unsubscribe = agentBridge.onQuestion((nextQuestion) => {
       receivedEvent = true;
       if (active) setQuestion(nextQuestion);
     });
-    void window.yibiao.agent.getPendingQuestion()
+    void agentBridge.getPendingQuestion()
       .then((pendingQuestion) => {
         if (active && !receivedEvent) setQuestion(pendingQuestion);
       })
@@ -50,13 +52,15 @@ export function AgentQuestionDialogProvider({ children }: { children: ReactNode 
   }, []);
 
   useEffect(() => {
+    const autoConfirmationBridge = window.yibiao?.autoConfirmation;
+    if (!autoConfirmationBridge) return undefined;
     let active = true;
     let receivedEvent = false;
-    const unsubscribe = window.yibiao.autoConfirmation.onChanged((state) => {
+    const unsubscribe = autoConfirmationBridge.onChanged((state) => {
       receivedEvent = true;
       if (active) setAutoAnswerEnabledState(state.enabled);
     });
-    void window.yibiao.autoConfirmation.getState()
+    void autoConfirmationBridge.getState()
       .then((state) => {
         if (active && !receivedEvent) setAutoAnswerEnabledState(state.enabled);
       })

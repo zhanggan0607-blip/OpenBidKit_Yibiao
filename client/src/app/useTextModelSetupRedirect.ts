@@ -30,6 +30,7 @@ export function useTextModelSetupRedirect(requestSectionChange: (section: Sectio
   });
 
   useEffect(() => {
+    if (!window.yibiao) return undefined;
     let disposed = false;
     let balanceRedirectAt = 0;
     let startupBalanceCheck = false;
@@ -40,7 +41,7 @@ export function useTextModelSetupRedirect(requestSectionChange: (section: Sectio
     const redirectForBalance = () => {
       if (disposed || Date.now() - balanceRedirectAt < BALANCE_REDIRECT_COOLDOWN_MS) return;
       balanceRedirectAt = Date.now();
-      redirectRef.current(true, '易标官方 API 余额不足，请充值后继续使用');
+      redirectRef.current(true, '投标精灵官方 API 余额不足，请充值后继续使用');
     };
 
     // 启动余额只判断一次；未登录或余额未知时不跳转，由联网提示和账户页处理。
