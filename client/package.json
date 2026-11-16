@@ -1,6 +1,6 @@
 {
   "name": "yibiao-client",
-  "version": "0.1.0",
+  "version": "2.32.4",
   "private": true,
   "description": "投标精灵独立桌面客户端",
   "author": "mark",
@@ -88,7 +88,8 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "perMachine": false
+      "perMachine": false,
+      "include": "nsis/installer.nsh"
     },
     "msi": {
       "oneClick": false,
