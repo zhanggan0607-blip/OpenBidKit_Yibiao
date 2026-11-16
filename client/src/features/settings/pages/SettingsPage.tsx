@@ -53,8 +53,8 @@ function normalizeUpdateChannel(value?: string): UpdateChannel {
 
 const textModelProviders: Array<{ value: TextModelProvider; label: string }> = [
   { value: 'official', label: '投标精灵官方API' },
-  { value: 'jinlong', label: '金龙中转站【推荐】' },
-  { value: 'volcengine', label: '火山方舟' },
+  { value: 'jinlong', label: '金龙中转站' },
+  { value: 'volcengine', label: '火山方舟【推荐】' },
   { value: 'deepseek', label: 'DeepSeek' },
   { value: 'agnes', label: 'Agnes AI' },
   { value: 'custom', label: '自定义' },
@@ -73,7 +73,7 @@ const DEFAULT_TEXT_TEMPERATURE = 0.7;
 const textProviderDefaults: Record<TextModelProvider, TextModelConfig> = {
   official: { api_key: '', base_url: 'https://v3.yibiao.pro/qhp-ai/anonymous/openai/v1', model_name: 'TEXT_GENERATION', multimodal_enabled: true, reasoning_effort: '', context_length_limit: 258000, output_token_limit: 128000, concurrency_limit: 50, temperature_enabled: false, temperature: DEFAULT_TEXT_TEMPERATURE, request_mode: 'stream' },
   jinlong: { api_key: '', base_url: 'https://jlaudeapi.com/v1', model_name: 'gpt-3.5-turbo', multimodal_enabled: false, reasoning_effort: '', context_length_limit: DEFAULT_TEXT_CONTEXT_LENGTH_LIMIT, output_token_limit: DEFAULT_TEXT_OUTPUT_TOKEN_LIMIT, concurrency_limit: DEFAULT_TEXT_CONCURRENCY_LIMIT, temperature_enabled: false, temperature: DEFAULT_TEXT_TEMPERATURE, request_mode: 'stream' },
-  volcengine: { api_key: '', base_url: 'https://ark.cn-beijing.volces.com/api/v3', model_name: '', multimodal_enabled: false, reasoning_effort: '', context_length_limit: DEFAULT_TEXT_CONTEXT_LENGTH_LIMIT, output_token_limit: DEFAULT_TEXT_OUTPUT_TOKEN_LIMIT, concurrency_limit: DEFAULT_TEXT_CONCURRENCY_LIMIT, temperature_enabled: false, temperature: DEFAULT_TEXT_TEMPERATURE, request_mode: 'stream' },
+  volcengine: { api_key: '', base_url: 'https://ark.cn-beijing.volces.com/api/v3', model_name: 'deepseek-v4-1-flash-260910', multimodal_enabled: false, reasoning_effort: '', context_length_limit: DEFAULT_TEXT_CONTEXT_LENGTH_LIMIT, output_token_limit: DEFAULT_TEXT_OUTPUT_TOKEN_LIMIT, concurrency_limit: DEFAULT_TEXT_CONCURRENCY_LIMIT, temperature_enabled: false, temperature: DEFAULT_TEXT_TEMPERATURE, request_mode: 'stream' },
   deepseek: { api_key: '', base_url: 'https://api.deepseek.com', model_name: '', multimodal_enabled: false, reasoning_effort: '', context_length_limit: DEFAULT_TEXT_CONTEXT_LENGTH_LIMIT, output_token_limit: DEFAULT_TEXT_OUTPUT_TOKEN_LIMIT, concurrency_limit: DEFAULT_TEXT_CONCURRENCY_LIMIT, temperature_enabled: false, temperature: DEFAULT_TEXT_TEMPERATURE, request_mode: 'stream' },
   agnes: { api_key: '', base_url: 'https://apihub.agnes-ai.com/v1', model_name: '', multimodal_enabled: false, reasoning_effort: '', context_length_limit: DEFAULT_TEXT_CONTEXT_LENGTH_LIMIT, output_token_limit: DEFAULT_TEXT_OUTPUT_TOKEN_LIMIT, concurrency_limit: DEFAULT_TEXT_CONCURRENCY_LIMIT, temperature_enabled: false, temperature: DEFAULT_TEXT_TEMPERATURE, request_mode: 'stream' },
   custom: { api_key: '', base_url: '', model_name: '', multimodal_enabled: false, reasoning_effort: '', context_length_limit: DEFAULT_TEXT_CONTEXT_LENGTH_LIMIT, output_token_limit: DEFAULT_TEXT_OUTPUT_TOKEN_LIMIT, concurrency_limit: DEFAULT_TEXT_CONCURRENCY_LIMIT, temperature_enabled: false, temperature: DEFAULT_TEXT_TEMPERATURE, request_mode: 'stream' },
@@ -202,8 +202,8 @@ function textProfileFromState(textModel: SettingsPageState['textModel']): TextMo
 
 const imageProviders: Array<{ value: ImageModelProvider; label: string }> = [
   { value: 'official', label: '投标精灵官方API' },
-  { value: 'jinlong', label: '金龙中转站【推荐】' },
-  { value: 'volcengine', label: '火山方舟' },
+  { value: 'jinlong', label: '金龙中转站' },
+  { value: 'volcengine', label: '火山方舟【推荐】' },
   { value: 'google-ai-studio', label: 'Google AI Studio' },
   { value: 'agnes', label: 'Agnes AI' },
   { value: 'custom', label: '自定义 OpenAI-like' },
@@ -303,7 +303,7 @@ const imageProviderDefaults: ImageModelProfiles = {
     provider: 'volcengine',
     base_url: 'https://ark.cn-beijing.volces.com/api/v3',
     api_key: '',
-    model_name: '',
+    model_name: 'doubao-seedream-5-0-flash-260915',
     image_size: '1024x1024',
     image_watermark: true,
     request_mode: 'stream',
@@ -633,13 +633,13 @@ const parserOptions = [
 
 const initialState: SettingsPageState = {
   textModel: {
-    provider: 'official',
-    ...textProviderDefaults.official,
+    provider: 'volcengine',
+    ...textProviderDefaults.volcengine,
   },
   textModelProfiles: createDefaultTextModelProfiles(),
   officialApiModelType: 'cost-effective',
   imageModel: {
-    ...imageProviderDefaults.jinlong,
+    ...imageProviderDefaults.volcengine,
   },
   imageModelProfiles: createDefaultImageModelProfiles(),
   components: {

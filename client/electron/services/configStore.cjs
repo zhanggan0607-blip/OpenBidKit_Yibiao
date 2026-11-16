@@ -60,7 +60,7 @@ const defaultTextModelProfiles = {
   volcengine: {
     api_key: '',
     base_url: textProviderBaseUrls.volcengine,
-    model_name: '',
+    model_name: 'deepseek-v4-1-flash-260910',
     multimodal_enabled: false,
     reasoning_effort: '',
     context_length_limit: DEFAULT_TEXT_CONTEXT_LENGTH_LIMIT,
@@ -140,7 +140,7 @@ const defaultImageModelProfiles = {
     provider: 'volcengine',
     base_url: 'https://ark.cn-beijing.volces.com/api/v3',
     api_key: '',
-    model_name: '',
+    model_name: 'doubao-seedream-5-0-flash-260915',
     image_size: '1024x1024',
     image_ratio: '1:1',
     image_watermark: true,
@@ -202,12 +202,12 @@ const defaultImageModelProfiles = {
 };
 
 const defaultConfig = {
-  text_model_provider: 'official',
+  text_model_provider: 'volcengine',
   official_api_model_type: 'cost-effective',
   text_model_profiles: defaultTextModelProfiles,
-  ...defaultTextModelProfiles.official,
+  ...defaultTextModelProfiles.volcengine,
   image_model: {
-    ...defaultImageModelProfiles.jinlong,
+    ...defaultImageModelProfiles.volcengine,
   },
   image_model_profiles: defaultImageModelProfiles,
   components: {
@@ -489,14 +489,18 @@ function normalizeConfig(config) {
   const hasTextProvider = Object.prototype.hasOwnProperty.call(source, 'text_model_provider');
   const rawTextProvider = typeof source.text_model_provider === 'string' ? source.text_model_provider : '';
   const sourceTextProvider = isTextModelProvider(rawTextProvider) ? rawTextProvider : '';
-  const textModelProvider = sourceTextProvider
-    || (hasTextProvider ? defaultConfig.text_model_provider : config ? 'custom' : defaultConfig.text_model_provider);
+  // 官方账户已下线：存量 official 配置迁移到火山方舟，避免下拉框回落到金龙而请求仍指向官方接口。
+  const migratedFromOfficial = sourceTextProvider === 'official';
+  const textModelProvider = migratedFromOfficial
+    ? 'volcengine'
+    : sourceTextProvider
+      || (hasTextProvider ? defaultConfig.text_model_provider : config ? 'custom' : defaultConfig.text_model_provider);
   const textModelProfiles = normalizeTextModelProfiles(source.text_model_profiles);
-  if (sourceTextProvider) {
+  if (sourceTextProvider && !migratedFromOfficial) {
     const fallbackProfile = textModelProfiles[textModelProvider]
       || defaultTextModelProfiles[textModelProvider];
     textModelProfiles[textModelProvider] = textProfileFromFlatConfig(source, fallbackProfile, textModelProvider);
-  } else if (textModelProvider === 'custom' && !hasTextModelProfileData(textModelProfiles.custom)) {
+  } else if (!migratedFromOfficial && textModelProvider === 'custom' && !hasTextModelProfileData(textModelProfiles.custom)) {
     textModelProfiles.custom = textProfileFromUnknownProvider(source, rawTextProvider, textModelProfiles.custom);
   }
   const officialApiModelType = source.official_api_model_type ?? defaultConfig.official_api_model_type;
@@ -508,9 +512,16 @@ function normalizeConfig(config) {
   };
   const activeTextProfile = textModelProfiles[textModelProvider];
   const sourceImageModel = source.image_model && typeof source.image_model === 'object' ? source.image_model : {};
-  const imageModelProvider = isImageModelProvider(sourceImageModel.provider) ? sourceImageModel.provider : defaultConfig.image_model.provider;
+  const sourceImageProvider = isImageModelProvider(sourceImageModel.provider) ? sourceImageModel.provider : '';
+  // 生图同样迁移官方配置；官方档案字段不合并进火山方舟，避免把官方 Key 带过去。
+  const migratedImageFromOfficial = sourceImageProvider === 'official';
+  const imageModelProvider = migratedImageFromOfficial
+    ? 'volcengine'
+    : sourceImageProvider || defaultConfig.image_model.provider;
   const imageModelProfiles = normalizeImageModelProfiles(source.image_model_profiles);
-  imageModelProfiles[imageModelProvider] = normalizeImageModelProfile(imageModelProvider, sourceImageModel);
+  if (!migratedImageFromOfficial) {
+    imageModelProfiles[imageModelProvider] = normalizeImageModelProfile(imageModelProvider, sourceImageModel);
+  }
   const activeImageProfile = imageModelProfiles[imageModelProvider];
   const hasGpuHardwareAccelerationEnabled = typeof source.gpu_hardware_acceleration_enabled === 'boolean';
   const hasGpuHardwareAccelerationConfigured = typeof source.gpu_hardware_acceleration_configured === 'boolean';
