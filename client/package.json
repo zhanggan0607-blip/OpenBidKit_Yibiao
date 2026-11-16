@@ -7,7 +7,7 @@
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -k -n vite,electron -c blue,magenta \"vite --host 127.0.0.1 --port 5173 --strictPort\" \"wait-on http://127.0.0.1:5173 && cross-env ELECTRON_RENDERER_URL=http://127.0.0.1:5173 electron .\"",
+    "dev": "concurrently -k -n vite,electron -c blue,magenta \"vite --host 127.0.0.1 --port 5188 --strictPort\" \"wait-on http://127.0.0.1:5188 && cross-env ELECTRON_RENDERER_URL=http://127.0.0.1:5188 electron .\"",
     "build": "tsc --noEmit && vite build",
     "dist": "npm run build && node scripts/prepare-openxml-helper.cjs && node scripts/prepare-diagnosis-source.cjs && electron-builder",
     "dist:win": "npm run build && node scripts/prepare-openxml-helper.cjs --platform win32 --arch x64 && node scripts/prepare-diagnosis-source.cjs && electron-builder --win",
@@ -20,6 +20,7 @@
     "prepare-diagnosis-source": "node scripts/prepare-diagnosis-source.cjs",
     "verify-agent-tools": "node scripts/verify-agent-tools.cjs",
     "smoke:electron-native": "electron scripts/electron-native-smoke.cjs",
+    "server": "node server/start.cjs",
     "start": "electron ."
   },
   "build": {
@@ -197,12 +198,14 @@
     "mime-types": "^3.0.2",
     "pdf-parse": "^2.4.5",
     "pdfjs-dist": "^5.7.284",
+    "puppeteer-core": "^24.43.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "turndown": "^7.2.4",
     "turndown-plugin-gfm": "^1.0.2",
     "typebox": "^1.1.38",
     "undici": "^7.25.0",
+    "ws": "^8.23.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

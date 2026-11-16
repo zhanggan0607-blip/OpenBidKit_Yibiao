@@ -11,10 +11,30 @@ export default defineConfig({
   },
   server: {
     host: '127.0.0.1',
-    port: 5173,
+    port: 5188,
     strictPort: true,
     fs: {
       allow: ['.'],
+    },
+    // 浏览器网页版：开发态把 WS/RPC 与文件上传、资产、下载路由一并代理到
+    // 本地服务端（client/server）；生产态浏览器直接访问服务端口，无需代理。
+    proxy: {
+      '/ws': {
+        target: 'ws://127.0.0.1:8737',
+        ws: true,
+      },
+      '/rpc': {
+        target: 'http://127.0.0.1:8737',
+      },
+      '/web-upload': {
+        target: 'http://127.0.0.1:8737',
+      },
+      '/yibiao-asset': {
+        target: 'http://127.0.0.1:8737',
+      },
+      '/yibiao-file': {
+        target: 'http://127.0.0.1:8737',
+      },
     },
   },
   build: {

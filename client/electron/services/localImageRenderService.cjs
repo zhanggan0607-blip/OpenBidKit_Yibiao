@@ -861,5 +861,11 @@ module.exports = {
   createLocalImageRenderService,
   getLocalImageRenderService,
   initLocalImageRenderService,
-  __test__: { buildHtmlLayoutProbeScript },
+  __test__: {
+    buildHtmlLayoutProbeScript,
+    // 纯页面构建函数：供服务端 headless 渲染复用（同一套画布/质检语义）。
+    buildMermaidDocument,
+    buildHtmlDocument,
+    buildExactHtmlDocument,
+  },
 };

@@ -5,7 +5,6 @@ export type SettingsTab = 'general' | 'text-model' | 'image-model' | 'components
 /** 应用级跳转传给设置页的一次性请求，设置页消费后由应用清除。 */
 export interface SettingsPageRequest {
   tab: SettingsTab;
-  openRecharge: boolean;
 }
 
 export interface SettingsPageState {

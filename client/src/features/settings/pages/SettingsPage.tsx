@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { trackConfigUsage } from '../../../shared/analytics/analytics';
-import { AppDialog, AppSwitch, DetailHelpLink, FloatingToolbar, InlineSpinner, InputWithAction, OfflineLicenseActivationDialog, useAutoAnswer, useToast } from '../../../shared/ui';
+import { AppDialog, AppSwitch, DetailHelpLink, FloatingToolbar, InlineSpinner, InputWithAction, useAutoAnswer, useToast } from '../../../shared/ui';
 import { showUpdateReadyToast } from '../../../shared/updateToast';
 import type { FloatingToolbarGroup } from '../../../shared/ui';
-import type { AgentSelfCheckResult, AgentSelfCheckStepStatus, AiRequestMode, ClientConfig, ComponentsConfig, FileParserProvider, ImageModelConfig, ImageModelProfiles, ImageModelProvider, ImageModelRatio, ImageModelSize, ImageModelStatus, LicenseRuntimeStatus, TextModelConfig, TextModelProfiles, TextModelProvider, UpdateChannel } from '../../../shared/types';
+import type { AgentSelfCheckResult, AgentSelfCheckStepStatus, AiRequestMode, ClientConfig, ComponentsConfig, FileParserProvider, ImageModelConfig, ImageModelProfiles, ImageModelProvider, ImageModelRatio, ImageModelSize, ImageModelStatus, TextModelConfig, TextModelProfiles, TextModelProvider, UpdateChannel } from '../../../shared/types';
 import type { SettingsPageRequest, SettingsPageState, SettingsTab } from '../types';
 import ChangelogDialog from '../../changelog/components/ChangelogDialog';
 import { useChangelogUnread } from '../../changelog/hooks/useChangelogUnread';
-import OfficialApiPanel from '../components/OfficialApiPanel';
-import type { OfficialApiTab } from '../components/OfficialApiPanel';
 import StorageSpaceDialog from '../components/StorageSpaceDialog';
 
 type UpdateStatus = 'idle' | 'checking' | 'downloading' | 'downloaded' | 'error' | 'disabled';
@@ -51,11 +49,6 @@ function normalizeUpdateChannel(value?: string): UpdateChannel {
     return value;
   }
   return 'atomgit';
-}
-
-function getLicenseSourceLabel(status: LicenseRuntimeStatus | null) {
-  if (!status) return '读取中';
-  return status.sourceTrusted ? '官方发行版' : '不可信的客户端来源';
 }
 
 const textModelProviders: Array<{ value: TextModelProvider; label: string }> = [
@@ -674,13 +667,11 @@ interface SettingsPageProps {
   registerLeaveGuard?: (guard: ((nextSection?: string) => Promise<boolean>) | null) => void;
 }
 
-// 管理设置草稿、模型配置和文本与生图共用的官方账户面板。
+// 管理设置草稿和模型配置。
 function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, registerLeaveGuard }: SettingsPageProps) {
   const [state, setState] = useState<SettingsPageState>(initialState);
   const [activeTab, setActiveTab] = useState<SettingsTab>(() => request?.tab ?? 'general');
-  const [rechargeRequested, setRechargeRequested] = useState(false);
   const [savedConfig, setSavedConfig] = useState<ClientConfig | null>(null);
-  const [officialApiTab, setOfficialApiTab] = useState<OfficialApiTab>('statement');
   const [textModels, setTextModels] = useState<string[]>([]);
   const [reasoningEfforts, setReasoningEfforts] = useState<string[]>([]);
   const [imageModels, setImageModels] = useState<string[]>([]);
@@ -695,8 +686,6 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, regist
   const [updatePercent, setUpdatePercent] = useState(0);
   const [updateVersion, setUpdateVersion] = useState('');
   const [updateError, setUpdateError] = useState('');
-  const [licenseStatus, setLicenseStatus] = useState<LicenseRuntimeStatus | null>(null);
-  const [offlineLicenseDialogOpen, setOfflineLicenseDialogOpen] = useState(false);
   const [storageDialogOpen, setStorageDialogOpen] = useState(false);
   const [agentSelfCheckStatus, setAgentSelfCheckStatus] = useState<AgentSelfCheckUiStatus>('untested');
   const [agentSelfCheckResult, setAgentSelfCheckResult] = useState<AgentSelfCheckResult | null>(null);
@@ -741,7 +730,6 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, regist
   useEffect(() => {
     void loadTextConfig();
     void window.yibiao?.getVersion().then(setAppVersion);
-    void window.yibiao?.license?.getStatus().then(setLicenseStatus).catch(() => setLicenseStatus(null));
 
     const unsubs: Array<() => void> = [];
     unsubs.push(
@@ -809,16 +797,8 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, regist
   useEffect(() => {
     if (!request) return;
     void changeSettingsTab(request.tab);
-    if (request.openRecharge) setRechargeRequested(true);
     onRequestHandled?.();
   }, [request, onRequestHandled, changeSettingsTab]);
-
-  // 充值只在官方文本模型页打开；已切走或当前不是官方服务商时放弃本次请求。
-  useEffect(() => {
-    if (rechargeRequested && configLoaded && (activeTab !== 'text-model' || state.textModel.provider !== 'official')) {
-      setRechargeRequested(false);
-    }
-  }, [activeTab, configLoaded, rechargeRequested, state.textModel.provider]);
 
   // 弹窗中的自动确认开关实时保存后，同步刷新设置页草稿和已保存基准。
   useEffect(() => {
@@ -1724,7 +1704,6 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, regist
     if (updateStatus === 'disabled') return '开发调试模式不执行自动更新';
     return '启动后自动检查，每 30 分钟轮询';
   })();
-  const licenseSourceLabel = getLicenseSourceLabel(licenseStatus);
   const currentImageSizeOptions = getImageSizeOptions(state.imageModel.provider, state.imageModel.model_name);
   const currentImageSizeSupported = currentImageSizeOptions.some((option) => option.value === state.imageModel.image_size);
 
@@ -1896,31 +1875,25 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, regist
                 value={state.textModel.provider}
                 onChange={(event) => updateTextModelProvider(event.target.value as TextModelProvider)}
               >
-                {textModelProviders.map((provider) => (
+                {textModelProviders.filter((provider) => provider.value !== 'official').map((provider) => (
                   <option value={provider.value} key={provider.value}>{provider.label}</option>
                 ))}
               </select>
             </label>
           </div>
           {state.textModel.provider === 'official' ? (
-            <OfficialApiPanel
-              tab={officialApiTab}
-              onTabChange={setOfficialApiTab}
-              modelControls={(
-                <label className="settings-row">
-                  <div className="settings-row-copy"><strong>模型类型</strong></div>
-                  <select
-                    value={state.officialApiModelType}
-                    onChange={(event) => updateOfficialApiModelType(event.target.value as ClientConfig['official_api_model_type'])}
-                  >
-                    <option value="cost-effective">性价比优先</option>
-                    <option value="high-quality">高质量优先</option>
-                  </select>
-                </label>
-              )}
-              rechargeRequested={configLoaded && rechargeRequested}
-              onRechargeRequestHandled={() => setRechargeRequested(false)}
-            />
+            <div className="settings-list">
+              <label className="settings-row">
+                <div className="settings-row-copy"><strong>模型类型</strong></div>
+                <select
+                  value={state.officialApiModelType}
+                  onChange={(event) => updateOfficialApiModelType(event.target.value as ClientConfig['official_api_model_type'])}
+                >
+                  <option value="cost-effective">性价比优先</option>
+                  <option value="high-quality">高质量优先</option>
+                </select>
+              </label>
+            </div>
           ) : (
             <>
               <div className="settings-list">
@@ -2138,7 +2111,7 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, regist
                   updateImageModelProvider(provider);
                 }}
               >
-                {imageProviders.map((provider) => (
+                {imageProviders.filter((provider) => provider.value !== 'official').map((provider) => (
                   <option value={provider.value} key={provider.value}>{provider.label}</option>
                 ))}
               </select>
@@ -2232,24 +2205,18 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, regist
           </div>
 
           {state.imageModel.provider === 'official' ? (
-            <OfficialApiPanel
-              tab={officialApiTab}
-              onTabChange={setOfficialApiTab}
-              modelControls={(
-                <div className="settings-row">
-                  <div className="settings-row-copy"><strong>模型类型</strong></div>
-                  <div className="settings-control-with-action">
-                    <span>性价比优先</span>
-                    <button type="button" className="inline-action" onClick={testImageConfig} disabled={testingImageModel}>
-                      {testingImageModel && <InlineSpinner />}
-                      {testingImageModel ? '测试中' : '测试'}
-                    </button>
-                  </div>
+            <div className="settings-list">
+              <div className="settings-row">
+                <div className="settings-row-copy"><strong>模型类型</strong></div>
+                <div className="settings-control-with-action">
+                  <span>性价比优先</span>
+                  <button type="button" className="inline-action" onClick={testImageConfig} disabled={testingImageModel}>
+                    {testingImageModel && <InlineSpinner />}
+                    {testingImageModel ? '测试中' : '测试'}
+                  </button>
                 </div>
-              )}
-              rechargeRequested={configLoaded && rechargeRequested}
-              onRechargeRequestHandled={() => setRechargeRequested(false)}
-            />
+              </div>
+            </div>
           ) : (
             <>
               <div className="settings-group-title">高级参数</div>
@@ -2670,16 +2637,7 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, regist
                     wiki.agnet.top
                   </a>
                 </li>
-                <li className="about-links-item">
-                  <span className="about-links-label">客户端授权状态</span>
-                  <span className={`about-links-value ${licenseStatus?.sourceTrusted ? 'is-trusted' : 'is-untrusted'}`}>
-                    {licenseSourceLabel}
-                  </span>
-                </li>
               </ul>
-              <button type="button" className="about-links-activate" onClick={() => setOfflineLicenseDialogOpen(true)}>
-                离线激活授权
-              </button>
             </article>
           </div>
           <div className="privacy-statement">
@@ -2724,11 +2682,6 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled, regist
             </button>
           </>
         }
-      />
-      <OfflineLicenseActivationDialog
-        open={offlineLicenseDialogOpen}
-        onOpenChange={setOfflineLicenseDialogOpen}
-        onActivated={setLicenseStatus}
       />
       <ChangelogDialog
         open={changelogOpen}

@@ -1,5 +1,6 @@
 import { useMemo, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { renderMarkdownHtml } from '../markdown/renderMarkdownHtml';
+import { resolveAssetUrl } from '../bridge/webBridge';
 
 type MarkdownImageMode = 'default' | 'preview' | 'lazy';
 type MarkdownLinkMode = 'default' | 'external' | 'text';
@@ -113,7 +114,9 @@ function MarkdownRenderer({
       }
 
       if (tag === 'img') {
-        const src = element.getAttribute('src') || '';
+        const rawSrc = element.getAttribute('src') || '';
+        // 网页版：yibiao-asset:// 协议引用改写为同源 HTTP 路由（桌面版原样）。
+        const src = resolveAssetUrl(rawSrc);
         const alt = element.getAttribute('alt') || '正文图片';
         const mergedClassName = [className, imageClassName].filter(Boolean).join(' ') || undefined;
         const previewEnabled = imageMode === 'preview' && Boolean(src) && Boolean(onPreviewImage);
